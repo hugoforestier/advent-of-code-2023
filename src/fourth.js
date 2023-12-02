@@ -1,6 +1,6 @@
 const { readFileSync } = require('fs');
 
-const data = readFileSync('./inputs/input-2-1', 'utf8');
+const data = readFileSync('./inputs/input-2-2', 'utf8');
 
 var total = 0;
 
@@ -10,7 +10,9 @@ data.split('\n').forEach(line => {
         return;
     }
     const gameInfo = line.split(':')[1].replaceAll(';','').replaceAll(',', '');
-    let possible = true;
+    let minRed = 0;
+    let minGreen = 0;
+    let minBlue = 0;
     let even = false;
     let nbCubes = 0;
     gameInfo.split(' ').forEach(play => {
@@ -19,22 +21,26 @@ data.split('\n').forEach(line => {
                 nbCubes = Number(play);
                 even = true;
             } else {
-                if (play == 'red' && nbCubes > 12) {
-                    possible = false;
+                if (play == 'red') {
+                    if (nbCubes > minRed) {
+                        minRed = nbCubes;
+                    }
                 }
-                if (play == 'green' && nbCubes > 13) {
-                    possible = false;
+                if (play == 'green') {
+                    if (nbCubes > minGreen) {
+                        minGreen = nbCubes;
+                    }
                 }
-                if (play == 'blue' && nbCubes > 14) {
-                    possible = false;
+                if (play == 'blue') {
+                    if (nbCubes > minBlue) {
+                        minBlue = nbCubes;
+                    }
                 }
                 even = false;
             }
         }
     });
-    if (possible) {
-        total = total + Number(line.split(':')[0].split(' ')[1]);
-    }
+    total = total + (minRed * minBlue * minGreen)
 });
 
 console.log('The total is:', total);
